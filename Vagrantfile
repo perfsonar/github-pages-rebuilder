@@ -4,7 +4,7 @@
 
 default_box = "centos/7"
 
-name = "scratch"
+name = "website-rebuilder"
 
 Vagrant.configure("2") do |config|
 
