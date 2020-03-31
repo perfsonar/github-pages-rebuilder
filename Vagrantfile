@@ -26,7 +26,7 @@ Vagrant.configure("2") do |config|
 
     config.vm.provision "setup", type: "shell", run: "once", inline: <<-SHELL
       yum -y install make curl yum-cron
-      # yum -y update
+      yum -y update
       chown -R vagrant.vagrant /vagrant
       # Run it once to make sure it succeeds, then install.
       su - vagrant -c "make -C /vagrant rebuild"
