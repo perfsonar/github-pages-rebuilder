@@ -1,0 +1,51 @@
+#!/bin/sh -e
+#
+# Rebuild a GitHub Pages Site and write the result from the server to
+# an output file.
+#
+# Usage: rebuild PATH-TO-OUTPUT-FILE
+#
+
+OUTPUT="$1"
+
+touch "${OUTPUT}"
+
+WHEREAMI=$(dirname "$0")
+
+. "${WHEREAMI}/config"
+
+PARAMS="$(mktemp)"
+
+cleanup()
+{
+    rm -f "${PARAMS}"
+}
+trap cleanup EXIT
+
+
+# Securely build a parameter file with the login info
+
+touch "${PARAMS}"
+chmod 600 "${PARAMS}"
+printf 'user = "%s:%s"\n' "${LOGIN}" "${TOKEN}" > "${PARAMS}"
+
+
+# Build the site
+
+curl \
+    --silent \
+    --config - \
+    --request POST \
+    --header "Accept: application/vnd.github.mister-fantastic-preview+json" \
+    "https://api.github.com/repos/${ORG}/${REPO}/pages/builds" \
+    < "${PARAMS}" \
+    > "${OUTPUT}"
+
+
+# Check for a decent outcome; dump output otherwise.
+
+if ! tr -d '\n' < "${OUTPUT}" | egrep -q -e '"status"\s*:\s*"queued"'
+then
+    echo FAILED:
+    cat $OUTPUT 
+fi

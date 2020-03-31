@@ -1,0 +1,19 @@
+#
+# GitHub Pages Rebuilder Configuration
+#
+
+# A unique name for the site to be rebuild.  Characters should be kept
+# to letters, digits, hyphens and underscores.
+NAME=www_example_org
+
+# GitHub login to use to trigger the rebuild
+LOGIN=...
+
+# Access token for the login above
+TOKEN=...
+
+# Organization or User
+ORG=...
+
+# Repository
+REPO=...
