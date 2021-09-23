@@ -2,7 +2,7 @@
 # Vagrant Configuration for GitHub Pages Rebuilder
 #
 
-default_box = "centos/7"
+default_box = "alpine/alpine64"
 
 name = "website-rebuilder"
 
@@ -25,12 +25,22 @@ Vagrant.configure("2") do |config|
     end
 
     config.vm.provision "setup", type: "shell", run: "once", inline: <<-SHELL
-      yum -y install make curl yum-cron
-      yum -y update
-      chown -R vagrant.vagrant /vagrant
+
+      apk add \
+          curl \
+          make
+
+      REBUILDER_USER=rebuilder
+      adduser -D -g "Perfsonar.net Rebuilder" "${REBUILDER_USER}"
+      REBUILDER_HOME=$(getent passwd "${REBUILDER_USER}" | awk -F: '{ print $6 }')
+      REBUILDER_DIR="${REBUILDER_HOME}/rebuilder"
+
+      cp -r /vagrant "${REBUILDER_DIR}"
+      chown -R "${REBUILDER_USER}.${REBUILDER_USER}" "${REBUILDER_DIR}"
+
       # Run it once to make sure it succeeds, then install.
-      su - vagrant -c "make -C /vagrant rebuild"
-      su - vagrant -c "make -C /vagrant install"
+      su - "${REBUILDER_USER}" -c "make -C ${REBUILDER_DIR} rebuild"
+      su - "${REBUILDER_USER}" -c "make -C ${REBUILDER_DIR} install"
     SHELL
 
 end
