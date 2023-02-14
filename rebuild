@@ -8,6 +8,13 @@
 
 OUTPUT="$1"
 
+if [ -z "${OUTPUT}" ]
+then
+    echo "Usage: $(basename $0) OUTPUT-FILE" 1>&2
+    exit 1
+fi
+
+rm -f "${OUTPUT}"
 touch "${OUTPUT}"
 
 WHEREAMI=$(dirname "$0")
