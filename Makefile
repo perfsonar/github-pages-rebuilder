@@ -20,7 +20,7 @@ install::
 	. ./$(CONFIG) && sed -i -e "/^#BEGIN-builder-$${NAME}$$/,/^#END-$${NAME}$$/d" "$(CRONTAB)"
 	. ./$(CONFIG) && echo "#BEGIN-builder-$${NAME}" >> "$(CRONTAB)"
 	echo "# Installed $$(date)" >> "$(CRONTAB)"
-	printf "* 1,5,9,13,17,21 * * * %s/rebuild '%s'\n" "$(PWD)" "$(PWD)/$(LOG)" >> "$(CRONTAB)"
+	printf "0 1,5,9,13,17,21 * * * %s/rebuild '%s'\n" "$(PWD)" "$(PWD)/$(LOG)" >> "$(CRONTAB)"
 	. ./$(CONFIG) && echo "#END-builder-$${NAME}" >> "$(CRONTAB)"
 	crontab "$(CRONTAB)"
 	rm -f "$(CRONTAB)"
