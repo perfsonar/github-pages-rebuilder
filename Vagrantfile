@@ -2,7 +2,7 @@
 # Vagrant Configuration for GitHub Pages Rebuilder
 #
 
-default_box = "alpine/alpine64"
+default_box = "almalinux/9"
 
 name = "website-rebuilder"
 
@@ -26,12 +26,10 @@ Vagrant.configure("2") do |config|
 
     config.vm.provision "setup", type: "shell", run: "once", inline: <<-SHELL
 
-      apk add \
-          curl \
-          make
+      dnf -y install curl make
 
       REBUILDER_USER=rebuilder
-      adduser -D -g "Perfsonar.net Rebuilder" "${REBUILDER_USER}"
+      useradd -c "Perfsonar.net Rebuilder" "${REBUILDER_USER}"
       REBUILDER_HOME=$(getent passwd "${REBUILDER_USER}" | awk -F: '{ print $6 }')
       REBUILDER_DIR="${REBUILDER_HOME}/rebuilder"
 
